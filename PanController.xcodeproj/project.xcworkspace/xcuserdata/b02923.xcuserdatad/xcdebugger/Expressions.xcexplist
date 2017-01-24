@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "PanController.checkSubviewsStatus() -&gt; ():PanController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PanController.jumpTo(index : Int, animated : Bool) -&gt; ():PanController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "containers[2].subviews">
+            </PersistentString>
+            <PersistentString
+               value = "containers[0].subviews">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PanController.viewDidLayoutSubviews() -&gt; ():PanController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.onChangedSegmentedControl(UISegmentedControl) -&gt; ():ViewController.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

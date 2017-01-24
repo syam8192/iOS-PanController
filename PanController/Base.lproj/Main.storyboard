@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PanController" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C2Y-aF-4Vx">
+                                <rect key="frame" x="16" y="190" width="343" height="457"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Qna-DB-VlC">
+                                <rect key="frame" x="16" y="20" width="343" height="29"/>
+                                <segments>
+                                    <segment title="Horizontal"/>
+                                    <segment title="Vartical"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onChangedDirection:" destination="BYZ-38-t0r" eventType="valueChanged" id="a8K-LY-nrZ"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="d2J-6P-Dnf">
+                                <rect key="frame" x="16" y="64" width="343" height="29"/>
+                                <segments>
+                                    <segment title="None"/>
+                                    <segment title="Loop"/>
+                                    <segment title="Bounded"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onChangedLoopMode:" destination="BYZ-38-t0r" eventType="valueChanged" id="Q5W-Sc-MeM"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZsC-50-vzg">
+                                <rect key="frame" x="16" y="108" width="343" height="29"/>
+                                <segments>
+                                    <segment title="Normal"/>
+                                    <segment title="Parallax"/>
+                                    <segment title="Stack"/>
+                                    <segment title="Flip"/>
+                                    <segment title="Rotate"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onChangedTransition:" destination="BYZ-38-t0r" eventType="valueChanged" id="Aig-gE-pwp"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xbo-2V-Z83">
+                                <rect key="frame" x="16" y="154" width="343" height="29"/>
+                                <segments>
+                                    <segment title="0"/>
+                                    <segment title="1"/>
+                                    <segment title="2"/>
+                                    <segment title="3"/>
+                                    <segment title="4"/>
+                                    <segment title="5"/>
+                                    <segment title="6"/>
+                                    <segment title="7"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onChangedSegmentedControl:" destination="BYZ-38-t0r" eventType="valueChanged" id="4gj-Cd-bSq"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="d2J-6P-Dnf" secondAttribute="trailing" constant="16" id="0TE-rY-xzq"/>
+                            <constraint firstItem="d2J-6P-Dnf" firstAttribute="top" secondItem="Qna-DB-VlC" secondAttribute="bottom" constant="16" id="6LD-1R-whg"/>
+                            <constraint firstItem="ZsC-50-vzg" firstAttribute="top" secondItem="d2J-6P-Dnf" secondAttribute="bottom" constant="16" id="7KG-bp-Oq6"/>
+                            <constraint firstItem="d2J-6P-Dnf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="7o0-m6-6TC"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="C2Y-aF-4Vx" secondAttribute="bottom" constant="20" id="9F0-W1-iSk"/>
+                            <constraint firstAttribute="trailing" secondItem="Qna-DB-VlC" secondAttribute="trailing" constant="16" id="9SW-70-QgI"/>
+                            <constraint firstItem="Qna-DB-VlC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="9Xx-Ce-QqE"/>
+                            <constraint firstItem="C2Y-aF-4Vx" firstAttribute="top" secondItem="xbo-2V-Z83" secondAttribute="bottom" constant="8" id="BPQ-Ap-sAR"/>
+                            <constraint firstItem="Qna-DB-VlC" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="MIg-WU-df4"/>
+                            <constraint firstItem="xbo-2V-Z83" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="134" id="QBC-cr-JxY"/>
+                            <constraint firstItem="ZsC-50-vzg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="Tbk-xz-COc"/>
+                            <constraint firstItem="C2Y-aF-4Vx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="UXk-cT-dsa"/>
+                            <constraint firstAttribute="trailing" secondItem="ZsC-50-vzg" secondAttribute="trailing" constant="16" id="cah-Yy-Zvw"/>
+                            <constraint firstAttribute="trailing" secondItem="C2Y-aF-4Vx" secondAttribute="trailing" constant="16" id="gYX-Ik-6uT"/>
+                            <constraint firstItem="xbo-2V-Z83" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="sFs-tY-sUI"/>
+                            <constraint firstItem="xbo-2V-Z83" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="yTX-Bd-xcf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="containerView" destination="C2Y-aF-4Vx" id="pnY-WV-aM9"/>
+                        <outlet property="segmentedControl" destination="xbo-2V-Z83" id="Vdj-ax-SFy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
+        </scene>
+    </scenes>
+</document>
