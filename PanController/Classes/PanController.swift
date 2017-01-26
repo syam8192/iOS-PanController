@@ -79,14 +79,35 @@ class PanController: UIViewController {
     var panDelegate: PanControllerDelegate?
 
     // ページング対象のViewControllerオブジェクトの配列.
-    var viewControllers: [UIViewController] = [] {
+//    var viewControllers: [UIViewController] = [] {
+//        didSet {
+//            if let _ = self.scrollView {
+//                updateContainer()
+//            }
+//            childStatus = [ViewStatus](repeating: .out, count: count)
+//        }
+//    }
+
+    var pages: [AnyObject] = [] {
         didSet {
+            for (i, obj) in pages.enumerated().reversed() {
+                if let _: UIView = obj as? UIView { continue }
+                if let _: UIViewController = obj as? UIViewController { continue }
+                print("PanController.pages.didSet> WARNING! invalid class object(\(i)). removed.")
+                pages.remove(at: i)
+            }
             if let _ = self.scrollView {
                 updateContainer()
             }
             childStatus = [ViewStatus](repeating: .out, count: count)
         }
     }
+    func pageView(at index: Int) -> UIView? {
+        if let v: UIView = pages[index] as? UIView { return v }
+        if let vc: UIViewController = pages[index] as? UIViewController { return vc.view }
+        return nil
+    }
+
     // 現在のパン操作の方向.
     var panningDirection: Direction {
         if scrollValue < scrollWidth { return .previous }
@@ -105,15 +126,11 @@ class PanController: UIViewController {
     }
     // ページングする ViewController の数.
     var count: Int {
-        return viewControllers.count
+        return pages.count
     }
     // 現在見ている ViewController のインデックス.
     var index: Int {
         return currentIndex
-    }
-    // 現在見ている ViewController.
-    var currentViewController: UIViewController? {
-        return (currentIndex < 0 || currentIndex >= count) ? nil : viewControllers[currentIndex]
     }
     // 完全に外側になった ViewController の view を hidden にするか否か.
     var hideOutsideViews: Bool = false {
@@ -340,12 +357,13 @@ class PanController: UIViewController {
                 i = index < currentIndex ? 2 : 0
             }
         }
-        containers[i].subviews.forEach { $0.removeFromSuperview() }
-        containers[i].addSubview(viewControllers[index].view)
-        addFillingParentConstraints(toView: viewControllers[index].view)
-        containers[i].setNeedsLayout()
-        containers[i].layoutIfNeeded()
-        
+        if let pageView: UIView = pageView(at: index) {
+            containers[i].subviews.forEach { $0.removeFromSuperview() }
+            containers[i].addSubview(pageView)
+            addFillingParentConstraints(toView: pageView)
+            containers[i].setNeedsLayout()
+            containers[i].layoutIfNeeded()
+        }
         rightIndex = index
         isJumping = true
         panScrollViewWillBeginScrolling(scrollView)
@@ -424,15 +442,15 @@ class PanController: UIViewController {
             nextScrollInset = -scrollWidth
             newIndices[1] = currentIndex
         }
-
         for (i, newIndex) in newIndices.enumerated() {
             if newIndex >= 0 && newIndex != containIndices[i] {
                 let container = containers[i]
-                let content: UIView = viewControllers[newIndex].view
-                container.subviews.forEach{ $0.removeFromSuperview() }
-                container.addSubview(content)
-                addFillingParentConstraints(toView: content)
-                containIndices[i] = newIndex
+                if let contentView: UIView = pageView(at: newIndex) {
+                    container.subviews.forEach{ $0.removeFromSuperview() }
+                    container.addSubview(contentView)
+                    addFillingParentConstraints(toView: contentView)
+                    containIndices[i] = newIndex
+                }
             }
         }
     }
@@ -466,98 +484,100 @@ class PanController: UIViewController {
     // 各コンテナの現在の表示位置を確認して、必要に応じて 出現・消滅イベントを投げる.
     //
     private func checkSubviewsStatus(withCall: Bool = true) {
-        for (i, vc) in viewControllers.enumerated() {
-            var newStat: ViewStatus = .out
-            if let cvc: PanControllerChildren = vc as? PanControllerChildren {
-                // 状態マトリックス更新.
-                if let spView = vc.view.superview {
-                    let x = position(ofContainer: spView) - scrollValue
-                    if x < -scrollWidth { newStat = .out }
-                    else if x == -scrollWidth { newStat = .previous }
-                    else if x < 0 { newStat = .previousIn }
-                    else if x == 0 { newStat = .center }
-                    else if x < scrollWidth { newStat = .nextIn }
-                    else if x == scrollWidth { newStat = .next }
-                    else { newStat = .out }
-                }
-                else {
-                    newStat = .out
-                }
-                if withCall {
-                    switch childStatus[i] {
-                    case .center:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            cvc.viewWillOut(withPanController: self, to: .none)
-                            cvc.viewDidOut(withPanController: self, to: .none)
-                        case .previousIn:
-                            cvc.viewWillOut(withPanController: self, to: .previous)
+        for (i, pageObj) in pages.enumerated() {
+            if let vc: UIViewController = pageObj as? UIViewController {
+                var newStat: ViewStatus = .out
+                if let cvc: PanControllerChildren = vc as? PanControllerChildren {
+                    // 状態マトリックス更新.
+                    if let spView = vc.view.superview {
+                        let x = position(ofContainer: spView) - scrollValue
+                        if x < -scrollWidth { newStat = .out }
+                        else if x == -scrollWidth { newStat = .previous }
+                        else if x < 0 { newStat = .previousIn }
+                        else if x == 0 { newStat = .center }
+                        else if x < scrollWidth { newStat = .nextIn }
+                        else if x == scrollWidth { newStat = .next }
+                        else { newStat = .out }
+                    }
+                    else {
+                        newStat = .out
+                    }
+                    if withCall {
+                        switch childStatus[i] {
                         case .center:
-                            break
-                        case .nextIn:
-                            cvc.viewWillOut(withPanController: self, to: .next)
-                        }
-                    case .previousIn:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            cvc.viewDidOut(withPanController: self, to: .previous)
+                            switch newStat {
+                            case .out, .previous, .next:
+                                cvc.viewWillOut(withPanController: self, to: .none)
+                                cvc.viewDidOut(withPanController: self, to: .none)
+                            case .previousIn:
+                                cvc.viewWillOut(withPanController: self, to: .previous)
+                            case .center:
+                                break
+                            case .nextIn:
+                                cvc.viewWillOut(withPanController: self, to: .next)
+                            }
                         case .previousIn:
-                            break
-                        case .center:
-                            cvc.viewDidEnter(withPanController: self, from: .previous)
+                            switch newStat {
+                            case .out, .previous, .next:
+                                cvc.viewDidOut(withPanController: self, to: .previous)
+                            case .previousIn:
+                                break
+                            case .center:
+                                cvc.viewDidEnter(withPanController: self, from: .previous)
+                            case .nextIn:
+                                break
+                            }
                         case .nextIn:
-                            break
-                        }
-                    case .nextIn:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            cvc.viewDidOut(withPanController: self, to: .next)
-                        case .previousIn:
-                            break
-                        case .center:
-                            cvc.viewDidEnter(withPanController: self, from: .next)
-                        case .nextIn:
-                            break
-                        }
-                    case .previous:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            break
-                        case .previousIn:
-                            cvc.viewWillEnter(withPanController: self, from: .previous)
-                        case .center:
-                            cvc.viewWillEnter(withPanController: self, from: .none)
-                            cvc.viewDidEnter(withPanController: self, from: .none)
-                        case .nextIn:
-                            cvc.viewWillEnter(withPanController: self, from: .next)
-                        }
-                    case .next:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            break
-                        case .previousIn:
-                            cvc.viewWillEnter(withPanController: self, from: .previous)
-                        case .center:
-                            cvc.viewWillEnter(withPanController: self, from: .none)
-                            cvc.viewDidEnter(withPanController: self, from: .none)
-                        case .nextIn:
-                            cvc.viewWillEnter(withPanController: self, from: .next)
-                        }
-                    case  .out:
-                        switch newStat {
-                        case .out, .previous, .next:
-                            break
-                        case .previousIn:
-                            cvc.viewWillEnter(withPanController: self, from: .previous)
-                        case .center:
-                            cvc.viewWillEnter(withPanController: self, from: .none)
-                            cvc.viewDidEnter(withPanController: self, from: .none)
-                        case .nextIn:
-                            cvc.viewWillEnter(withPanController: self, from: .next)
+                            switch newStat {
+                            case .out, .previous, .next:
+                                cvc.viewDidOut(withPanController: self, to: .next)
+                            case .previousIn:
+                                break
+                            case .center:
+                                cvc.viewDidEnter(withPanController: self, from: .next)
+                            case .nextIn:
+                                break
+                            }
+                        case .previous:
+                            switch newStat {
+                            case .out, .previous, .next:
+                                break
+                            case .previousIn:
+                                cvc.viewWillEnter(withPanController: self, from: .previous)
+                            case .center:
+                                cvc.viewWillEnter(withPanController: self, from: .none)
+                                cvc.viewDidEnter(withPanController: self, from: .none)
+                            case .nextIn:
+                                cvc.viewWillEnter(withPanController: self, from: .next)
+                            }
+                        case .next:
+                            switch newStat {
+                            case .out, .previous, .next:
+                                break
+                            case .previousIn:
+                                cvc.viewWillEnter(withPanController: self, from: .previous)
+                            case .center:
+                                cvc.viewWillEnter(withPanController: self, from: .none)
+                                cvc.viewDidEnter(withPanController: self, from: .none)
+                            case .nextIn:
+                                cvc.viewWillEnter(withPanController: self, from: .next)
+                            }
+                        case  .out:
+                            switch newStat {
+                            case .out, .previous, .next:
+                                break
+                            case .previousIn:
+                                cvc.viewWillEnter(withPanController: self, from: .previous)
+                            case .center:
+                                cvc.viewWillEnter(withPanController: self, from: .none)
+                                cvc.viewDidEnter(withPanController: self, from: .none)
+                            case .nextIn:
+                                cvc.viewWillEnter(withPanController: self, from: .next)
+                            }
                         }
                     }
+                    childStatus[i] = newStat
                 }
-                childStatus[i] = newStat
             }
         }
     }
@@ -602,8 +622,10 @@ class PanController: UIViewController {
             // 2 ページしかない状態でループする場合、左右両方のコンテナが同じ ViewController を使うことになるため特別.
             let rightContainer: UIView = containers[scrollValue < scrollWidth ? 0 : 2]
             if rightContainer.subviews.count == 0 {
-                rightContainer.addSubview(viewControllers[rightIndex].view)
-                addFillingParentConstraints(toView: viewControllers[rightIndex].view)
+                if let nextView: UIView = pageView(at: rightIndex) {
+                    rightContainer.addSubview(nextView)
+                    addFillingParentConstraints(toView: nextView)
+                }
             }
         }
         if (count > 1) {

@@ -16,12 +16,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        var vcs: [UIViewController] = []
+        var vcs: [AnyObject] = []
         for i: Int in 0..<8 {
-            let vc = DummyViewController(i)
-            vc.view.backgroundColor =  UIColor(hue: CGFloat(i) / 8, saturation: 0.5, brightness: 1, alpha: 1)
-            vc.label.textColor = UIColor(hue: CGFloat(i) / 8, saturation: 0.9, brightness: 1, alpha: 1)
-            vcs.append(vc)
+            if i % 2 == 0 {
+                // 偶数ページには UILabel をそのまま設定.
+                let label = UILabel()
+                label.text = "Label \(i)"
+                vcs.append(label)
+            }
+            else {
+                // 奇数ページには DummyViewController を設定.
+                let vc = DummyViewController(i)
+                vc.view.backgroundColor =  UIColor(hue: CGFloat(i) / 8, saturation: 0.5, brightness: 1, alpha: 1)
+                vc.label.textColor = UIColor(hue: CGFloat(i) / 8, saturation: 0.9, brightness: 1, alpha: 1)
+                vcs.append(vc)
+            }
         }
         panController.loopMode = .none
         panController.scrollDirection = .horizontal
@@ -31,7 +40,7 @@ class ViewController: UIViewController {
         containerView.clipsToBounds = true
 
         // UIViewControlller オブジェクトの配列を渡します.
-        panController.viewControllers = vcs
+        panController.pages = vcs
 
         // 誰かの子ViewControllerになります.
         panController.becomeChildViewController(ofViewController: self, inView: containerView)

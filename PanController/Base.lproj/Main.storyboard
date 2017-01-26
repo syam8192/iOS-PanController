@@ -28,6 +28,9 @@
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Qna-DB-VlC">
                                 <rect key="frame" x="16" y="20" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="phb-vW-9h4"/>
+                                </constraints>
                                 <segments>
                                     <segment title="Horizontal"/>
                                     <segment title="Vartical"/>
@@ -38,6 +41,9 @@
                             </segmentedControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="d2J-6P-Dnf">
                                 <rect key="frame" x="16" y="64" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="250-gw-aQd"/>
+                                </constraints>
                                 <segments>
                                     <segment title="None"/>
                                     <segment title="Loop"/>
@@ -49,6 +55,9 @@
                             </segmentedControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZsC-50-vzg">
                                 <rect key="frame" x="16" y="108" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="gla-9p-m6x"/>
+                                </constraints>
                                 <segments>
                                     <segment title="Normal"/>
                                     <segment title="Parallax"/>
@@ -62,6 +71,9 @@
                             </segmentedControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xbo-2V-Z83">
                                 <rect key="frame" x="16" y="154" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="b5f-ek-Aro"/>
+                                </constraints>
                                 <segments>
                                     <segment title="0"/>
                                     <segment title="1"/>
