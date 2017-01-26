@@ -485,99 +485,98 @@ class PanController: UIViewController {
     //
     private func checkSubviewsStatus(withCall: Bool = true) {
         for (i, pageObj) in pages.enumerated() {
-            if let vc: UIViewController = pageObj as? UIViewController {
-                var newStat: ViewStatus = .out
-                if let cvc: PanControllerChildren = vc as? PanControllerChildren {
-                    // 状態マトリックス更新.
-                    if let spView = vc.view.superview {
-                        let x = position(ofContainer: spView) - scrollValue
-                        if x < -scrollWidth { newStat = .out }
-                        else if x == -scrollWidth { newStat = .previous }
-                        else if x < 0 { newStat = .previousIn }
-                        else if x == 0 { newStat = .center }
-                        else if x < scrollWidth { newStat = .nextIn }
-                        else if x == scrollWidth { newStat = .next }
-                        else { newStat = .out }
-                    }
-                    else {
-                        newStat = .out
-                    }
-                    if withCall {
-                        switch childStatus[i] {
-                        case .center:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                cvc.viewWillOut(withPanController: self, to: .none)
-                                cvc.viewDidOut(withPanController: self, to: .none)
-                            case .previousIn:
-                                cvc.viewWillOut(withPanController: self, to: .previous)
-                            case .center:
-                                break
-                            case .nextIn:
-                                cvc.viewWillOut(withPanController: self, to: .next)
-                            }
+            var newStat: ViewStatus = .out
+            if let cvc: PanControllerChildren = pageObj as? PanControllerChildren {
+                let view: UIView? = pageView(at: i)
+                // 状態マトリックス更新.
+                if let spView = view?.superview {
+                    let x = position(ofContainer: spView) - scrollValue
+                    if x < -scrollWidth { newStat = .out }
+                    else if x == -scrollWidth { newStat = .previous }
+                    else if x < 0 { newStat = .previousIn }
+                    else if x == 0 { newStat = .center }
+                    else if x < scrollWidth { newStat = .nextIn }
+                    else if x == scrollWidth { newStat = .next }
+                    else { newStat = .out }
+                }
+                else {
+                    newStat = .out
+                }
+                if withCall {
+                    switch childStatus[i] {
+                    case .center:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            cvc.viewWillOut(withPanController: self, to: .none)
+                            cvc.viewDidOut(withPanController: self, to: .none)
                         case .previousIn:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                cvc.viewDidOut(withPanController: self, to: .previous)
-                            case .previousIn:
-                                break
-                            case .center:
-                                cvc.viewDidEnter(withPanController: self, from: .previous)
-                            case .nextIn:
-                                break
-                            }
+                            cvc.viewWillOut(withPanController: self, to: .previous)
+                        case .center:
+                            break
                         case .nextIn:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                cvc.viewDidOut(withPanController: self, to: .next)
-                            case .previousIn:
-                                break
-                            case .center:
-                                cvc.viewDidEnter(withPanController: self, from: .next)
-                            case .nextIn:
-                                break
-                            }
-                        case .previous:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                break
-                            case .previousIn:
-                                cvc.viewWillEnter(withPanController: self, from: .previous)
-                            case .center:
-                                cvc.viewWillEnter(withPanController: self, from: .none)
-                                cvc.viewDidEnter(withPanController: self, from: .none)
-                            case .nextIn:
-                                cvc.viewWillEnter(withPanController: self, from: .next)
-                            }
-                        case .next:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                break
-                            case .previousIn:
-                                cvc.viewWillEnter(withPanController: self, from: .previous)
-                            case .center:
-                                cvc.viewWillEnter(withPanController: self, from: .none)
-                                cvc.viewDidEnter(withPanController: self, from: .none)
-                            case .nextIn:
-                                cvc.viewWillEnter(withPanController: self, from: .next)
-                            }
-                        case  .out:
-                            switch newStat {
-                            case .out, .previous, .next:
-                                break
-                            case .previousIn:
-                                cvc.viewWillEnter(withPanController: self, from: .previous)
-                            case .center:
-                                cvc.viewWillEnter(withPanController: self, from: .none)
-                                cvc.viewDidEnter(withPanController: self, from: .none)
-                            case .nextIn:
-                                cvc.viewWillEnter(withPanController: self, from: .next)
-                            }
+                            cvc.viewWillOut(withPanController: self, to: .next)
+                        }
+                    case .previousIn:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            cvc.viewDidOut(withPanController: self, to: .previous)
+                        case .previousIn:
+                            break
+                        case .center:
+                            cvc.viewDidEnter(withPanController: self, from: .previous)
+                        case .nextIn:
+                            break
+                        }
+                    case .nextIn:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            cvc.viewDidOut(withPanController: self, to: .next)
+                        case .previousIn:
+                            break
+                        case .center:
+                            cvc.viewDidEnter(withPanController: self, from: .next)
+                        case .nextIn:
+                            break
+                        }
+                    case .previous:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            break
+                        case .previousIn:
+                            cvc.viewWillEnter(withPanController: self, from: .previous)
+                        case .center:
+                            cvc.viewWillEnter(withPanController: self, from: .none)
+                            cvc.viewDidEnter(withPanController: self, from: .none)
+                        case .nextIn:
+                            cvc.viewWillEnter(withPanController: self, from: .next)
+                        }
+                    case .next:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            break
+                        case .previousIn:
+                            cvc.viewWillEnter(withPanController: self, from: .previous)
+                        case .center:
+                            cvc.viewWillEnter(withPanController: self, from: .none)
+                            cvc.viewDidEnter(withPanController: self, from: .none)
+                        case .nextIn:
+                            cvc.viewWillEnter(withPanController: self, from: .next)
+                        }
+                    case  .out:
+                        switch newStat {
+                        case .out, .previous, .next:
+                            break
+                        case .previousIn:
+                            cvc.viewWillEnter(withPanController: self, from: .previous)
+                        case .center:
+                            cvc.viewWillEnter(withPanController: self, from: .none)
+                            cvc.viewDidEnter(withPanController: self, from: .none)
+                        case .nextIn:
+                            cvc.viewWillEnter(withPanController: self, from: .next)
                         }
                     }
-                    childStatus[i] = newStat
                 }
+                childStatus[i] = newStat
             }
         }
     }
