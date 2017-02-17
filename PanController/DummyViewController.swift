@@ -14,6 +14,7 @@ class DummyViewController: UIViewController, PanControllerChildren {
         }
     }
     
+    @IBOutlet weak var tableView: UITableView!
     
     convenience init() {
         self.init(nibName: "DummyViewController", bundle: nil)
@@ -27,6 +28,10 @@ class DummyViewController: UIViewController, PanControllerChildren {
     override func viewDidLoad() {
         super.viewDidLoad()
         label.text = "\(number)"
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,3 +73,23 @@ class DummyViewController: UIViewController, PanControllerChildren {
     }
 
 }
+
+
+extension DummyViewController: UITableViewDataSource {
+
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
+    }
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+ 
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")
+        
+        cell?.textLabel?.text = "ROW \(indexPath.row)"
+        
+        return cell ?? UITableViewCell()
+        
+    }
+
+}
+

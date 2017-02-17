@@ -21,6 +21,7 @@ class ViewController: UIViewController {
             if i % 2 == 0 {
                 // 偶数ページには UILabel をそのまま設定.
                 let label = UILabel()
+                label.backgroundColor =  UIColor(hue: CGFloat(i) / 8, saturation: 1, brightness: 1, alpha: 1)
                 label.text = "Label \(i)"
                 vcs.append(label)
             }
@@ -104,7 +105,7 @@ extension ViewController: PanControllerDelegate {
     }
     func panController(panController: PanController, didChangePanningFromIndex fromIndex: Int, toIndex: Int, progress: CGFloat) {
 //        print("panControllerDidPan(fromIndex: \(fromIndex), toIndex: \(toIndex), progress: \(progress))")
-        self.segmentedControl.selectedSegmentIndex = fromIndex
+//        self.segmentedControl.selectedSegmentIndex = fromIndex
     }
     func panController(panController: PanController, didStopPanningFromIndex fromIndex: Int, toIndex: Int) {
 //        print("panControllerDidStopPanning(fromIndex: \(fromIndex), toIndex: \(toIndex)) ")
